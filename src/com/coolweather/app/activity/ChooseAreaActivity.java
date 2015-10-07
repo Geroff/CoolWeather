@@ -180,7 +180,7 @@ public class ChooseAreaActivity extends Activity {
 							closeProgressDialog();
 							if("province".equals(type)){
 								queryProvinces();
-							}else if("city".endsWith(type)){
+							}else if("city".equals(type)){
 								queryCities();
 							}else if("county".equals(type)){
 								queryCounties();
