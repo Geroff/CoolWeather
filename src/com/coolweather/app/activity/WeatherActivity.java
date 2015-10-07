@@ -10,11 +10,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coolweather.app.R;
+import com.coolweather.app.service.AutoUpdateService;
 import com.coolweather.app.utils.HttpCallbackListener;
 import com.coolweather.app.utils.HttpUtils;
 import com.coolweather.app.utils.Utility;
@@ -30,7 +34,6 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	
 	private Button switch_city;
 	private Button refresh_weather;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +58,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			showWeather();
 		}
 		switch_city.setOnClickListener(this);
+		
 		refresh_weather.setOnClickListener(this);
 		
 		
@@ -122,6 +126,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		publishText.setText("今天" + prefs.getString("publish_time", "") + "发布");
 		weather_info_layout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		Intent intent = new Intent(this, AutoUpdateService.class);
+		startService(intent);
 	}
 
 	@Override
@@ -135,6 +141,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.refresh_weather:
 			publishText.setText("同步中...");
+			Animation rotate =  AnimationUtils.loadAnimation(this, R.anim.fresh);
+			refresh_weather.startAnimation(rotate);
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			String weatherCode = prefs.getString("weather_code", "");
 			
